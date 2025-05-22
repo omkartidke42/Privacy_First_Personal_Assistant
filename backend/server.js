@@ -1,29 +1,27 @@
-// server.ts
-import express from "express";
-import cors from "cors"; // <-- Import CORS
-import connectDB from "./config/db.js";
-import authRoutes from "./routes/authRoutes.js";
+import express from 'express';
+import dotenv from 'dotenv';
+import connectDB from './config/db.js';
+import cookieParser from 'cookie-parser';
+
+import authRoutes from './routes/authRoutes.js';
+import protectedRoutes from './routes/protectedRoutes.js'; 
+
+dotenv.config();
 
 const app = express();
 
-// Middleware
 app.use(express.json());
+app.use(cookieParser());
 
-// Enable CORS for React Native (usually runs on localhost:8081)
-app.use(
-  cors({
-    origin: "http://localhost:8081",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+// Public routes
+app.use('/api/auth', authRoutes);
 
-// Routes
-app.use("/api/auth", authRoutes);
+// Protected routes
+app.use('/api/protected', protectedRoutes); 
 
-// Connect DB and start server
+// Start server
 connectDB().then(() => {
-  app.listen(3000, '0.0.0.0', () => {
-    console.log("Server running on http://0.0.0.0:3000");
+  app.listen(3000, () => {
+    console.log('🚀 Server running on http://localhost:3000');
   });
 });

@@ -1,6 +1,10 @@
 // controllers/authController.ts
 import bcrypt from "bcrypt";
 import User from "../models/user.js";
+import jwt from 'jsonwebtoken'
+
+const SECRET_KEY = process.env.JWT_SECRET;
+
 
 export const registerUser = async (req,res) => {
   try {
@@ -35,36 +39,49 @@ export const registerUser = async (req,res) => {
 };
 
 
+const createAccessToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+    expiresIn: '15m',
+  });
+};
+
+const createRefreshToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_REFRESH_SECRET, {
+    expiresIn: '7d',
+  });
+};
+
 export const login = async (req, res) => {
-  try {
-    const { userEmail, userPassword } = req.body;
+  const { userEmail, userPassword } = req.body;
 
-    if (!userEmail || !userPassword) {
-      return res.status(400).json({ message: "Email and password are required." });
-    }
+  const user = await User.findOne({ userEmail });
+  if (!user) return res.status(401).json({ message: 'Invalid email' });
 
-    // Find user by email
-    const user = await User.findOne({ userEmail });
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
-    }
+  const isMatch = await bcrypt.compare(userPassword, user.userPassword);
+  if (!isMatch) return res.status(401).json({ message: 'Invalid password' });
 
-    // Compare the hashed password
-    const isMatch = await bcrypt.compare(userPassword, user.userPassword);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid password." });
-    }
+  const accessToken = createAccessToken(user._id);
+  const refreshToken = createRefreshToken(user._id);
 
-    // Success
-    res.status(200).json({
-      message: "Login successful",
-      user: {
-        userName: user.userName,
-        userEmail: user.userEmail,
-      },
-    });
-  } catch (err) {
-    console.error("Login error:", err);
-    res.status(500).json({ message: "Server error." });
-  }
+  // Set cookies
+  res.cookie('access_token', accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 15 * 60 * 1000, // 15 minutes
+  });
+
+  res.cookie('refresh_token', refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
+
+  return res.status(200).json({
+    message: 'Login successful',
+    user: {
+      id: user._id,
+      email: user.userEmail,
+      name: user.userName,
+    },
+  });
 };
