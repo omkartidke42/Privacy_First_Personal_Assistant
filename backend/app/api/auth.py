@@ -3,12 +3,12 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
-from database import SessionLocal
-from models import User
-from utils import verify_password
+from app.database import SessionLocal
+from app.schemas.user import User
+from app.utils import verify_password
 from fastapi import Depends
 
-SECRET_KEY = "mysecretkey"
+SECRET_KEY = "mysecretkey" 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
