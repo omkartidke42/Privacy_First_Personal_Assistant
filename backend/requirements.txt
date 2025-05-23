@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+python-jose[cryptography]
+passlib[bcrypt]
+sqlalchemy
+sqlite3  # Only needed explicitly if not included with Python (usually it is)

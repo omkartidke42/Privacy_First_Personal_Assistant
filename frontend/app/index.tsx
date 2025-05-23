@@ -1,18 +1,21 @@
 import { StyleSheet, Text, View, Pressable } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 
 const Index = () => {
   const router = useRouter();
+  useEffect(() =>{
+    setTimeout(() => {
+      router.push("/welcome")
+    }, 3000);
+  })
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome</Text>
-
-      <Pressable style={styles.button} onPress={() => router.push('/register')}>
-        <Text style={styles.buttonText}>Go to Register</Text>
-      </Pressable>
+    <>
+    <View>
+      <Text>Welcome</Text>
     </View>
+    </>
   );
 };
 
