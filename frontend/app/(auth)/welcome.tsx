@@ -1,48 +1,63 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { useRouter } from 'expo-router'
+import { Pressable, StyleSheet, Text, View, Animated } from 'react-native';
+import React from 'react';
+import { useRouter } from 'expo-router';
+import { verticalScale } from '../../utils/styling';
 
-const welcome = () => {
-    const router = useRouter();
+const Welcome = () => {
+  const router = useRouter();
+
   return (
-    <>
-     <View>
-      <Text>Assist. Protect. Repeat</Text>
-    </View>
+    <View style={styles.container}>
 
-    <View>
-         <Pressable style={styles.button} onPress={() => router.push('/register')}>
-                <Text style={styles.buttonText}>Go to Register</Text>
-              </Pressable>
-    </View>
-    </>
-   
-  )
-}
+      <Text style={styles.title}>Assist. Protect. Repeat</Text>
 
-export default welcome
+      <Animated.Image
+        source={require('/home/qed42/Desktop/React_Native/P_A_Project/frontend/assets/images/pngImage.png')}
+        style={styles.image}
+        resizeMode="contain"
+      />
+
+      <Pressable style={styles.button} onPress={() => router.push('/register')}>
+        <Text style={styles.buttonText}>Get Started</Text>
+      </Pressable>
+    </View>
+  );
+};
+
+export default Welcome;
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#fff',
-    },
-    title: {
-      fontSize: 24,
-      marginBottom: 20,
-      color: '#ef4444', // Tailwind "red-500"
-    },
-    button: {
-      backgroundColor: '#3b82f6', // Tailwind "blue-500"
-      paddingVertical: 12,
-      paddingHorizontal: 20,
-      borderRadius: 8,
-    },
-    buttonText: {
-      color: '#fff',
-      fontSize: 16,
-    },
-  });
-  
+  container: {
+    flex: 1,
+    backgroundColor: '#000', // Black background
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#facc15', 
+    marginBottom: verticalScale(40),
+    textAlign: 'center',
+  },
+  image: {
+    width: '100%',
+    height: verticalScale(250),
+    marginBottom: verticalScale(40),
+  },
+  button: {
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 5,
+    elevation: 5,
+    borderColor: '#fff',
+    backgroundColor:'#f5f5f5'
+  },
+  buttonText: {
+    color: '#000',
+    fontSize: 18,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+});

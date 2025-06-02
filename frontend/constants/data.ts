@@ -8,7 +8,7 @@ export const expenseCategories: ExpenseCategoriesType = {
     label: "Groceries",
     value: "groceries",
     icon: Icons.ShoppingCart,
-    bgColor: "#4B5563", // Deep Teal Green
+    bgColor: "#4B5563", 
   },
   rent: {
     label: "Rent",

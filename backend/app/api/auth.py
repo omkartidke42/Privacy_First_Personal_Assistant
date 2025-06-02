@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
 from app.database import SessionLocal
-from app.schemas.user import User
+from app.schemas.RegisterInput import RegisterInput
 from app.utils import verify_password
 from fastapi import Depends
 

@@ -1,15 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import BackButton from '@/components/BackButton'
-import Input from '@/components/Input'
-import ScreenWrapper from '@/components/ScreenWrapper'
-import Typo from '@/components/Typo'
-import { colors, spacingX, spacingY } from '@/constants/theme'
+// import BackButton from '@/components/BackButton'
+import Input from '../../components/Input'
+import ScreenWrapper from '../../components/ScreenWrapper'
+import Typo from '../../components/Typo'
+import { colors, spacingX, spacingY } from '../../constants/theme'
 import { router, useRouter } from 'expo-router'
 import  { ReactNode, useRef, useState } from 'react'
 import { ActivityIndicator, Alert, GestureResponderEvent, Pressable } from 'react-native'
-import { verticalScale } from '@/utils/styling'
-import { CustomButtonProps } from '@/types'
+import { verticalScale } from '../../utils/styling'
+// import { CustomButtonProps } from '@/types'
 import axios from 'axios'
 
 
@@ -70,7 +70,7 @@ const login = () => {
 return (
   <ScreenWrapper>
   <View style={styles.container}>
-      <BackButton iconSize={28} />
+      {/* <BackButton iconSize={28} /> */}
       <View style={{ gap: 5, marginTop: spacingY._20 }}>
           <Typo size={30} fontWeight={"800"}>Let's,</Typo>
           <Typo size={30} fontWeight={"800"}>Get started</Typo>

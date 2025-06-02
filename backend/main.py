@@ -9,7 +9,7 @@ from app.api.auth import authenticate_user, create_access_token, get_current_use
 # create_access_token: Generates a JWT token for authenticated users.
 # get_current_user: A dependency to get the user from the token.
 # get_db: A dependency that provides a database session.
-from app.schemas.user import User
+# from app.schemas.user import User
 # import user model where table is created
 from fastapi.security import OAuth2PasswordRequestForm
 # Provides an input form schema for receiving username/password from a login form.
@@ -19,7 +19,12 @@ from app.utils import get_password_hash
 from app.database import Base, engine
 # Imports database metadata and engine.
 from app.schemas.loginInput import LoginInput
+from app.schemas.RegisterInput import RegisterInput
 from app.services.email.routes import router as email_router
+from fastapi.middleware.cors import CORSMiddleware
+from app.models.user import User 
+
+
 
 Base.metadata.create_all(bind=engine)
 # create_all(): Automatically creates all tables defined in Base (in your case, the User table) if they don't already exist.
@@ -28,22 +33,31 @@ app = FastAPI()
 
 
 app.include_router(email_router, prefix="/email", tags=["email"])
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8081"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],  # allow all headers
+)
 @app.post("/register")
-def register_user(username: str, email: str, password: str, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.username == username).first()
-    #Checks if the user already exists.
+def register_user(credentials: RegisterInput, db: Session = Depends(get_db)):
+    print("API Hit")
+
+    user = db.query(User).filter(User.username == credentials.username).first()
     if user:
         raise HTTPException(status_code=400, detail="Username already exists")
+
     new_user = User(
-        username=username,
-        email=email,
-        hashed_password=get_password_hash(password)
+        username=credentials.username,
+        email=credentials.email,
+        hashed_password=get_password_hash(credentials.password)
     )
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return {"msg": "User created"}
+
 
 
 @app.post("/token")
@@ -56,7 +70,7 @@ def login(credentials: LoginInput, db: Session = Depends(get_db)):
     return {"access_token": token, "token_type": "bearer"}
 
 @app.get("/protected")
-def protected_route(current_user: User = Depends(get_current_user)):
+def protected_route(current_user: RegisterInput = Depends(get_current_user)):
     return {"message": f"Hello, {current_user.username}! This is a protected route."}
 
 @app.get("/")

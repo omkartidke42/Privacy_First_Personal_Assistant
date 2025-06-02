@@ -1,6 +1,6 @@
-import { colors } from '@/constants/theme'
-import { TypoProps } from '@/types'
-import { verticalScale } from '@/utils/styling'
+import { colors } from '../constants/theme'
+import { TypoProps } from '../types'
+import { verticalScale } from '../utils/styling'
 import React from 'react'
 import { StyleSheet, Text, TextStyle } from 'react-native'
 
